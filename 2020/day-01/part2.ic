@@ -1,82 +1,18 @@
-if ::= scope {
-  enter ::= jump(b: bool) { goto b, then(), else() | done() }
+--     ::= import "core.ic"
+cstdio ::= import "cstdio.ic"
 
-  then ::= block {
-    before ::= () -> () {}
-    after ::= jump() { goto done() }
-  }
-
-  else ::= block {
-    before ::= () -> () {}
-    after ::= jump() { goto done() }
-  }
-
-  exit ::= () -> () {}
-}
-
-while ::= scope {
-  enter ::= jump(b: bool) { goto b, do(), done() }
-
-  do ::= block {
-    before ::= () -> () {}
-    after ::= jump() { goto start() }
-  }
-
-  exit ::= () -> () {}
-}
-
-Print ::= (n: int8) -> () { Print(n as int64) }
-Print ::= (n: int16) -> () { Print(n as int64) }
-Print ::= (n: int32) -> () { Print(n as int64) }
 Print ::= (n: int64) -> () {
   printf ::= foreign("printf", (*nat8, int64) -> int32)
   printf(&"%lld"[0], n)
 }
 
-Print ::= (n: nat8) -> () { Print(n as nat64) }
-Print ::= (n: nat16) -> () { Print(n as nat64) }
-Print ::= (n: nat32) -> () { Print(n as nat64) }
-Print ::= (n: nat64) -> () {
-  printf ::= foreign("printf", (*nat8, nat64) -> int32)
-  printf(&"%llu"[0], n)
-}
-
-Print ::= (b: bool) -> () {
-  if (b) then { Print("true") } else { Print("false") }
-}
-
-Print ::= (s: byte_view) -> () {
-  printf ::= foreign("printf", (*nat8, *nat8) -> int32)
-  printf(&"%s"[0], &s[0])
-}
-
-Print ::= (f: float32) -> () { Print(f as float64) }
-
-Print ::= (f: float64) -> () {
-  printf ::= foreign("printf", (*nat8, float64) -> int32)
-  printf(&"%f"[0], f)
-}
-
-Print ::= (p: *CFile) -> () {
-  printf ::= foreign("printf", (*nat8, *CFile) -> int32)
-  printf(&"CFile(0x%016llx)"[0], p)
-}
-
-CFile ::= 'opaque
-fopen ::= foreign("fopen", (*nat8, *nat8) -> *CFile)
-fscanf ::= foreign("fscanf", (*CFile, *nat8, *int64) -> int32)
-fclose ::= foreign("fclose", *CFile -> int32)
-
-// -------------------------------
-
-handle := fopen(&"input.txt"[0], &"r"[0])
-EOF ::= 4294967295 as int32
+handle := cstdio.fopen(&"input.txt"[0], &"r"[0])
 
 i := 0
 nums: [200; int64]
-while (fscanf(handle, &"%lld"[0], &nums[i]) != EOF) do {  i += 1 }
+while (cstdio.fscanf(handle, &"%lld"[0], &nums[i]) != cstdio.eof) do {  i += 1 }
 
-fclose(handle)
+cstdio.fclose(handle)
 
 num ::= nums:?.length as int64
 i = 0
