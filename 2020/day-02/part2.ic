@@ -11,10 +11,15 @@ second: int64
 char: nat8
 password: [1024; nat8]
 
+valid_password ::= (password: [*]nat8, char: nat8,
+                    first: int64, second: int64) =>
+  (password[first - 1] == char) ^
+  (password[second - 1] == char)
+
 success_count := 0
-while (fscanf(handle, &"%lld-%lld %c: %s"[0], &first, &second, &char, &password[0]) != cstdio.eof) do {
-  if ((password[first - 1] == char) ^
-      (password[second - 1] == char)) then {
+while (fscanf(handle, &"%lld-%lld %c: %s"[0],
+       &first, &second, &char, &password[0]) != cstdio.eof) do {
+  if (valid_password(&password[0], char, first, second)) then {
     success_count += 1
   }
 }
