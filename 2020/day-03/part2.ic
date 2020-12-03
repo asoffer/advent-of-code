@@ -1,0 +1,48 @@
+--     ::= import "core.ic"
+cstdio ::= import "cstdio.ic"
+
+width  ::= 31
+height ::= 323
+
+map: [height, width + 1; nat8]
+load_map("input.txt", &map)
+
+counts := [
+  count_trees(&map, right = 1, down = 1),
+  count_trees(&map, right = 3, down = 1),
+  count_trees(&map, right = 5, down = 1),
+  count_trees(&map, right = 7, down = 1),
+  count_trees(&map, right = 1, down = 2)]
+printf(&"%lld\n"[0], counts[0] * counts[1] * counts[2] * counts[3] * counts[4])
+
+// Implementations below
+
+printf ::= foreign("printf", (*nat8, int64) -> int32)
+
+load_map ::= (file_name: byte_view, m: *[height, width + 1; nat8]) -> () {
+  handle := cstdio.fopen(&file_name[0], &"r"[0])
+  
+  i := 0
+  while (i < height) do {
+    cstdio.fgets(&(@m)[i][0], (width + 1) as int32, handle)
+    cstdio.fgetc(handle) // Ignore remaining newline.
+    i += 1
+  }
+  
+  cstdio.fclose(handle)
+}
+
+
+count_trees ::= (m: *[height, width + 1; nat8], right: int64, down: int64) -> int64 {
+  i := 0
+  j := 0
+  tree_count := 0
+  while (i < height) do {
+    if ((@m)[i][j % width] == "#"[0]) then {
+      tree_count += 1
+    }
+    i += down
+    j += right
+  }
+  return tree_count
+}
