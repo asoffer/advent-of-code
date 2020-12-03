@@ -8,12 +8,11 @@ edition = "2018"
 
 [[bin]]
 name = "part1"
-path = "src/part1.rs"
+path = "part1.rs"
 
 [[bin]]
 name = "part2"
-path = "src/part2.rs"
+path = "part2.rs"
 
 [dependencies]
-lazy_static = "1"
-regex = "1"
+text_io = "0.1.8"
