@@ -1,0 +1,32 @@
+--     ::= import "core.ic"
+cstdio ::= import "cstdio.ic"
+io     ::= import "io.ic"
+file   ::= import "file.ic"
+
+parse_seat ::= (p: [*]nat8, len: nat64) -> int64 {
+  result := 0
+  q := p // TODO `p` cannot be modified.
+  repeat (len) do {
+    result *= 2
+    if (q[0] == "B"[0] | q[0] == "R"[0]) then {
+      result += 1 
+    }
+    q = &q[1]
+  }
+  return result
+}
+
+max ::= (lhs: $lhs, rhs: $lhs) -> $lhs {
+  if (lhs < rhs) then { return rhs }
+  return lhs
+}
+
+seat := 0
+file.File ("input.txt") open [f: *cstdio.File] {
+  line: [1024; nat8]
+  while (cstdio.fgets(&line[0], 1024 as int32, f) != null) do {
+    seat = max(seat, parse_seat(&line[0], 10 as nat64))
+  }
+}
+
+io.Print(seat)
