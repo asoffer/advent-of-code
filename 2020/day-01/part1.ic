@@ -1,24 +1,18 @@
 --     ::= import "core.ic"
 cstdio ::= import "cstdio.ic"
 io     ::= import "io.ic"
+file   ::= import "file.ic"
 
-Print ::= (n: int64) -> () {
-  printf ::= foreign("printf", (*nat8, int64) -> int32)
-  printf(&"%lld"[0], n)
-}
-
-handle := cstdio.fopen(&"input.txt"[0], &"r"[0])
-
-i := 0
 length ::= 200
 nums: [length; int64]
-fscanf ::= foreign("fscanf", (*cstdio.File, [*]nat8, *int64) -> int32)
-while (fscanf(handle, &"%lld"[0], &nums[i]) != cstdio.eof) do {  i += 1 }
 
-cstdio.fclose(handle)
+file.File ("input.txt") open [f: *cstdio.File] {
+  fscanf ::= foreign("fscanf", (*cstdio.File, [*]nat8, *int64) -> int32)
+  index := 0
+  while (fscanf(f, &"%lld"[0], &nums[index]) != cstdio.eof) do { index += 1 }
+}
 
-i = 0
-
+i := 0
 while (i < length) do {
   j := i + 1
   while (j < length) do {

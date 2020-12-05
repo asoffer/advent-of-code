@@ -1,13 +1,15 @@
 --     ::= import "core.ic"
 cstdio ::= import "cstdio.ic"
 io     ::= import "io.ic"
+file   ::= import "file.ic"
 
 width  ::= 31
 height ::= 323
 
 map: [height, width + 1; nat8]
-
-load_map("input.txt", &map)
+file.File ("input.txt") open [f: *cstdio.File] {
+  load_map(f, &map) 
+}
 
 i := 0
 tree_count := 0
@@ -20,19 +22,11 @@ while (i < height) do {
 
 io.Print(tree_count)
 
-// Implementations below
-
-printf ::= foreign("printf", (*nat8, int64) -> int32)
-
-load_map ::= (file_name: byte_view, m: *[height, width + 1; nat8]) -> () {
-  handle := cstdio.fopen(&file_name[0], &"r"[0])
-  
+load_map ::= (f: *cstdio.File, m: *[height, width + 1; nat8]) -> () {
   i := 0
   while (i < height) do {
-    cstdio.fgets(&(@m)[i][0], (width + 1) as int32, handle)
-    cstdio.fgetc(handle) // Ignore remaining newline.
+    cstdio.fgets(&(@m)[i][0], (width + 1) as int32, f)
+    cstdio.fgetc(f) // Ignore remaining newline.
     i += 1
   }
-  
-  cstdio.fclose(handle)
 }
