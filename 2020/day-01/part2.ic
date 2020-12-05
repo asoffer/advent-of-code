@@ -1,5 +1,6 @@
 --     ::= import "core.ic"
 cstdio ::= import "cstdio.ic"
+io     ::= import "io.ic"
 
 Print ::= (n: int64) -> () {
   printf ::= foreign("printf", (*nat8, int64) -> int32)
@@ -9,19 +10,19 @@ Print ::= (n: int64) -> () {
 handle := cstdio.fopen(&"input.txt"[0], &"r"[0])
 
 i := 0
-nums: [200; int64]
-while (cstdio.fscanf(handle, &"%lld"[0], &nums[i]) != cstdio.eof) do {  i += 1 }
+length ::= 200
+nums: [length; int64]
+fscanf ::= foreign("fscanf", (*cstdio.File, [*]nat8, *int64) -> int32)
+while (fscanf(handle, &"%lld"[0], &nums[i]) != cstdio.eof) do {  i += 1 }
 
 cstdio.fclose(handle)
 
-num ::= nums:?.length as int64
 i = 0
-
-while (i < num) do {
+while (i < length) do {
   j := i + 1
-  while (j < num) do {
+  while (j < length) do {
     k := j + 1
-    while (k < num) do {
+    while (k < length) do {
       if (nums[i] + nums[j] + nums[k] == 2020) then {
         Print(nums[i] * nums[j] * nums[k])
       }

@@ -1,5 +1,6 @@
 --     ::= import "core.ic"
 cstdio ::= import "cstdio.ic"
+io     ::= import "io.ic"
 
 handle := cstdio.fopen(&"input.txt"[0], &"r"[0])
 
@@ -29,5 +30,4 @@ while (fscanf(handle, &"%lld-%lld %c: %s"[0], &low, &high, &char, &password[0]) 
 
 cstdio.fclose(handle)
 
-printf ::= foreign("printf", (*nat8, int64) -> int32)
-printf(&"%lld\n"[0], success_count)
+io.Print(success_count)
