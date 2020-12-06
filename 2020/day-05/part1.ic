@@ -11,7 +11,7 @@ parse_seat ::= (p: [*]nat8, len: nat64) -> int64 {
     if (q[0] == "B"[0] | q[0] == "R"[0]) then {
       result += 1 
     }
-    q = &q[1]
+    q += 1
   }
   return result
 }
