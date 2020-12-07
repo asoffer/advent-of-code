@@ -23,10 +23,8 @@ while (i < height) do {
 io.Print(tree_count)
 
 load_map ::= (f: *cstdio.File, m: *[height, width + 1; nat8]) -> () {
-  i := 0
-  while (i < height) do {
+  for (0, height) do [i: int64] {
     cstdio.fgets(&(@m)[i][0], (width + 1) as int32, f)
     cstdio.fgetc(f) // Ignore remaining newline.
-    i += 1
   }
 }
