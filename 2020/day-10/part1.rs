@@ -7,12 +7,12 @@ fn main() {
     adapters.push(0);
     adapters.sort();
     adapters.push(adapters.last().unwrap() + 3);
-    let diffs = adapters
+    let (ones, threes) = adapters
         .windows(2)
         .map(|w| w[1] - w[0])
-        .collect::<Vec<i64>>();
-    println!(
-        "{}",
-        diffs.iter().filter(|&n| *n == 1).count() * diffs.iter().filter(|&n| *n == 3).count()
-    );
+        .map(|n| ((n == 1) as i64, (n == 3) as i64))
+        .fold((0, 0), |(acc_ones, acc_threes), (is_one, is_three)| {
+            (acc_ones + is_one, acc_threes + is_three)
+        });
+    println!("{}", ones * threes);
 }

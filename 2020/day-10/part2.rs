@@ -1,6 +1,4 @@
-fn count_arrangements_ending_with(index: usize,
-                                  adapters: &[i64],
-                                  cache: &[usize]) -> usize {
+fn count_arrangements_ending_with(index: usize, adapters: &[i64], cache: &[usize]) -> usize {
     if index == 0 {
         return 1;
     }
@@ -29,5 +27,5 @@ fn main() {
         let count = count_arrangements_ending_with(i, &adapters, &cache);
         cache.push(count);
     }
-    println!("{}",cache.last().unwrap());
+    println!("{}", cache.last().unwrap());
 }
