@@ -4,17 +4,17 @@ io     ::= import "io.ic"
 file   ::= import "file.ic"
 
 length ::= 200
-nums: [length; int64]
+nums: [length; i64]
 
 file.File ("input.txt") open [f: *cstdio.File] {
-  fscanf ::= foreign("fscanf", (*cstdio.File, [*]nat8, *int64) -> int32)
+  fscanf ::= foreign("fscanf", (*cstdio.File, [*]u8, *i64) -> i32)
   index := 0
   while (fscanf(f, &"%lld"[0], &nums[index]) != cstdio.eof) do { index += 1 }
 }
 
-for (0, length) do [i: int64] {
-  for (i + 1, length) do [j: int64] {
-    for (j + 1, length) do [k: int64] {
+for (0, length) do [i: i64] {
+  for (i + 1, length) do [j: i64] {
+    for (j + 1, length) do [k: i64] {
       if (nums[i] + nums[j] + nums[k] == 2020) then {
         io.Print(nums[i] * nums[j] * nums[k])
       }

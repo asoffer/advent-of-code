@@ -3,7 +3,7 @@ cstdio ::= import "cstdio.ic"
 io     ::= import "io.ic"
 file   ::= import "file.ic"
 
-parse_seat ::= (p: [*]nat8, len: nat64) -> int64 {
+parse_seat ::= (p: [*]u8, len: u64) -> i64 {
   result := 0
   q := p // TODO `p` cannot be modified.
   repeat (len) do {
@@ -23,9 +23,9 @@ max ::= (lhs: $lhs, rhs: $lhs) -> $lhs {
 
 seat := 0
 file.File ("input.txt") open [f: *cstdio.File] {
-  line: [1024; nat8]
-  while (cstdio.fgets(&line[0], 1024 as int32, f) != null) do {
-    seat = max(seat, parse_seat(&line[0], 10 as nat64))
+  line: [1024; u8]
+  while (cstdio.fgets(&line[0], 1024 as i32, f) != null) do {
+    seat = max(seat, parse_seat(&line[0], 10 as u64))
   }
 }
 

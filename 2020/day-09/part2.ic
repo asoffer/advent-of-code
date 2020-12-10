@@ -4,48 +4,48 @@ io     ::= import "io.ic"
 file   ::= import "file.ic"
 
 NUM_LINES ::= 1000
-nums: [NUM_LINES; int64]
+nums: [NUM_LINES; i64]
 
 file.File ("input.txt") open [f: *cstdio.File] {
-  fscanf ::= foreign("fscanf", (*cstdio.File, [*]nat8, *int64) -> int32)
+  fscanf ::= foreign("fscanf", (*cstdio.File, [*]u8, *i64) -> i32)
   index := 0
   while (fscanf(f, &"%lld"[0], &nums[index]) != cstdio.eof) do { index += 1 }
 }
 
-validate ::= (ptr: [*]int64, len: int64) -> int64 {
+validate ::= (ptr: [*]i64, len: i64) -> i64 {
   last := ptr[len - 1]
-  for (0, len - 2) do [i: int64] {
-    for (i, len - 1) do [j: int64] {
+  for (0, len - 2) do [i: i64] {
+    for (i, len - 1) do [j: i64] {
       if (ptr[i] + ptr[j] == last) then { return -1 }
     }
   }
   return last
 }
 
-sum ::= (ptr: [*]int64, len: int64) -> int64 {
+sum ::= (ptr: [*]i64, len: i64) -> i64 {
   total := 0
-  for (0, len) do [i: int64] { total += ptr[i] }
+  for (0, len) do [i: i64] { total += ptr[i] }
   return total
 }
 
-max ::= (ptr: [*]int64, len: int64) -> int64 {
+max ::= (ptr: [*]i64, len: i64) -> i64 {
   m := 0
-  for (0, len) do [i: int64] {
+  for (0, len) do [i: i64] {
     if (m < ptr[i]) then { m = ptr[i] }
   }
   return m
 }
 
-min ::= (ptr: [*]int64, len: int64) -> int64 {
+min ::= (ptr: [*]i64, len: i64) -> i64 {
   m := 1024 * 1024 * 1024 * 1024 * 1024 * 1024
-  for (0, len) do [i: int64] {
+  for (0, len) do [i: i64] {
     if (m > ptr[i]) then { m = ptr[i] }
   }
   return m
 }
 
-magic_num ::= (nums: [*]int64) -> int64 {
-  for (0, NUM_LINES - 25) do [i: int64] {
+magic_num ::= (nums: [*]i64) -> i64 {
+  for (0, NUM_LINES - 25) do [i: i64] {
     num := validate(&nums[i], 26)
     if (num != -1) then {
       return num
@@ -55,8 +55,8 @@ magic_num ::= (nums: [*]int64) -> int64 {
 
 num := (&nums[0])'magic_num
 
-for (0, NUM_LINES - 25) do [i: int64] {
-  for (1, 25) do [j: int64] {
+for (0, NUM_LINES - 25) do [i: i64] {
+  for (1, 25) do [j: i64] {
     s := sum(&nums[i], j)
     if (num == s) then {
       io.Print(min(&nums[i], j) + max(&nums[i], j))

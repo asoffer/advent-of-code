@@ -6,7 +6,7 @@ file   ::= import "file.ic"
 width  ::= 31
 height ::= 323
 
-map: [height, width + 1; nat8]
+map: [height, width + 1; u8]
 file.File ("input.txt") open [f: *cstdio.File] {
   load_map(f, &map) 
 }
@@ -22,9 +22,9 @@ while (i < height) do {
 
 io.Print(tree_count)
 
-load_map ::= (f: *cstdio.File, m: *[height, width + 1; nat8]) -> () {
-  for (0, height) do [i: int64] {
-    cstdio.fgets(&(@m)[i][0], (width + 1) as int32, f)
+load_map ::= (f: *cstdio.File, m: *[height, width + 1; u8]) -> () {
+  for (0, height) do [i: i64] {
+    cstdio.fgets(&(@m)[i][0], (width + 1) as i32, f)
     cstdio.fgetc(f) // Ignore remaining newline.
   }
 }
