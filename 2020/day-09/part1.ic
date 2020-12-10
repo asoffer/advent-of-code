@@ -1,0 +1,31 @@
+--     ::= import "core.ic"
+cstdio ::= import "cstdio.ic"
+io     ::= import "io.ic"
+file   ::= import "file.ic"
+
+NUM_LINES ::= 1000
+nums: [NUM_LINES; int64]
+
+file.File ("input.txt") open [f: *cstdio.File] {
+  fscanf ::= foreign("fscanf", (*cstdio.File, [*]nat8, *int64) -> int32)
+  index := 0
+  while (fscanf(f, &"%lld"[0], &nums[index]) != cstdio.eof) do { index += 1 }
+}
+
+validate ::= (ptr: [*]int64, len: int64) -> int64 {
+  last := ptr[len - 1]
+  for (0, len - 2) do [i: int64] {
+    for (i, len - 1) do [j: int64] {
+      if (ptr[i] + ptr[j] == last) then { return -1 }
+    }
+  }
+  return last
+}
+
+for (0, NUM_LINES - 25) do [i: int64] {
+  num := validate(&nums[i], 26)
+  if (num != -1) then {
+    io.Print(num)
+    io.Print("\n")
+  }
+}
