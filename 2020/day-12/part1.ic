@@ -1,0 +1,53 @@
+--     ::= import "core.ic"
+cstdio ::= import "cstdio.ic"
+errno  ::= import "errno.ic"
+io     ::= import "io.ic"
+file   ::= import "file.ic"
+math   ::= import "math.ic"
+
+fscanf ::= foreign("fscanf", (*cstdio.File, [*]u8, *u8, *i32) -> i32)
+
+PositionAndOrientation ::= struct {
+  orientation: i32
+  x: i32
+  y: i32
+}
+
+p: PositionAndOrientation
+
+file.File ("input.txt") open [f: *cstdio.File] {
+  direction: u8
+  amount: i32
+  while (fscanf(f, &"%c%d\n"[0], &direction, &amount) != cstdio.eof) do {
+    if (direction == "N"[0]) then {
+      p.y += amount
+    } else if (direction == "E"[0]) then {
+      p.x += amount
+    } else if (direction == "S"[0]) then {
+      p.y -= amount
+    } else if (direction == "W"[0]) then {
+      p.x -= amount
+    } else if (direction == "L"[0]) then {
+      p.orientation += amount
+      p.orientation %= 360 as i32
+    } else if (direction == "R"[0]) then {
+      p.orientation += 360 as i32 - amount
+      p.orientation %= 360 as i32
+    } else if (direction == "F"[0]) then {
+      if (p.orientation == 0 as i32) then {
+        p.x += amount
+      } else if (p.orientation == 90 as i32) then {
+        p.y += amount
+      } else if (p.orientation == 180 as i32) then {
+        p.x -= amount
+      } else if (p.orientation == 270 as i32) then {
+        p.y -= amount
+      }
+    }
+  }
+  io.Print(math.Abs(p.x) + math.Abs(p.y))
+} error [e: errno.error] {
+  io.Print("Failed to load file with error code: ")
+  io.Print(e as u64)
+  io.Print("\n")
+}

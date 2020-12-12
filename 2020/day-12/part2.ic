@@ -1,0 +1,48 @@
+--     ::= import "core.ic"
+cstdio ::= import "cstdio.ic"
+errno  ::= import "errno.ic"
+io     ::= import "io.ic"
+file   ::= import "file.ic"
+math   ::= import "math.ic"
+
+fscanf ::= foreign("fscanf", (*cstdio.File, [*]u8, *u8, *i32) -> i32)
+
+Position ::= struct {
+  x: i32
+  y: i32
+}
+
+ship: Position
+waypoint := Position.{ x = 10 as i32 \\ y = 1 as i32 }
+
+file.File ("input.txt") open [f: *cstdio.File] {
+  direction: u8
+  amount: i32
+  while (fscanf(f, &"%c%d\n"[0], &direction, &amount) != cstdio.eof) do {
+    if (direction == "N"[0]) then {
+      waypoint.y += amount
+    } else if (direction == "E"[0]) then {
+      waypoint.x += amount
+    } else if (direction == "S"[0]) then {
+      waypoint.y -= amount
+    } else if (direction == "W"[0]) then {
+      waypoint.x -= amount
+    } else if (direction == "L"[0]) then {
+      repeat (amount as i64/ 90) do {
+        (waypoint.x, waypoint.y) = (-waypoint.y, waypoint.x)
+      }
+    } else if (direction == "R"[0]) then {
+      repeat (amount as i64/ 90) do {
+        (waypoint.x, waypoint.y) = (waypoint.y, -waypoint.x)
+      }
+    } else if (direction == "F"[0]) then {
+      ship.x += waypoint.x * amount
+      ship.y += waypoint.y * amount
+    }
+  }
+  io.Print(math.Abs(ship.x) + math.Abs(ship.y))
+} error [e: errno.error] {
+  io.Print("Failed to load file with error code: ")
+  io.Print(e as u64)
+  io.Print("\n")
+}
