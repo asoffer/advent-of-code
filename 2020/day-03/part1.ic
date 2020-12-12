@@ -11,13 +11,11 @@ file.File ("input.txt") open [f: *cstdio.File] {
   load_map(f, &map) 
 }
 
-i := 0
 tree_count := 0
-while (i < height) do {
+for (0, height) do [i: i64] {
   if (map[i][3 * i % width] == "#"[0]) then {
     tree_count += 1
   }
-  i += 1
 }
 
 io.Print(tree_count)
