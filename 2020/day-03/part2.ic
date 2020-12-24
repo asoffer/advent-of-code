@@ -8,20 +8,20 @@ height ::= 323
 
 map: [height, width + 1; u8]
 file.File ("input.txt") open [f: *cstdio.File] {
-  load_map(f, &map) 
+  load_map(f, map) 
 }
 
 counts := [
-  count_trees(&map, right = 1, down = 1),
-  count_trees(&map, right = 3, down = 1),
-  count_trees(&map, right = 5, down = 1),
-  count_trees(&map, right = 7, down = 1),
-  count_trees(&map, right = 1, down = 2)]
+  count_trees(map, right = 1, down = 1),
+  count_trees(map, right = 3, down = 1),
+  count_trees(map, right = 5, down = 1),
+  count_trees(map, right = 7, down = 1),
+  count_trees(map, right = 1, down = 2)]
 io.Print(counts[0] * counts[1] * counts[2] * counts[3] * counts[4])
 
 load_map ::= (f: *cstdio.File, m: *[height, width + 1; u8]) -> () {
   for (0, height) do [i: i64] {
-    cstdio.fgets(&(@m)[i][0], (width + 1) as i32, f)
+    cstdio.fgets((@m)[i][0], (width + 1) as i32, f)
     cstdio.fgetc(f) // Ignore remaining newline.
   }
 }
