@@ -7,9 +7,9 @@ length ::= 200
 nums: [length; i64]
 
 file.File ("input.txt") open [f: *cstdio.File] {
-  fscanf ::= foreign("fscanf", (*cstdio.File, [*]u8, *i64) -> i32)
+  fscanf ::= foreign("fscanf", (*cstdio.File, [*]char, *i64) -> i32)
   index := 0
-  while (fscanf(f, &"%lld"[0], &nums[index]) != cstdio.eof) do { index += 1 }
+  while (fscanf(f, "%lld".data, &nums[index]) != cstdio.eof) do { index += 1 }
 }
 
 for (0, length) do [i: i64] {

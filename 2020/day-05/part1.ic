@@ -3,14 +3,12 @@ cstdio ::= import "cstdio.ic"
 io     ::= import "io.ic"
 file   ::= import "file.ic"
 
-parse_seat ::= (p: [*]u8, len: u64) -> i64 {
+parse_seat ::= (p: [*]char, len: u64) -> i64 {
   result := 0
   q := p // TODO `p` cannot be modified.
-  repeat (len) do {
+  repeat (len as i64) do {
     result *= 2
-    if (q[0] == "B"[0] | q[0] == "R"[0]) then {
-      result += 1 
-    }
+    if (q[0] == `B or q[0] == `R) then { result += 1  }
     q += 1
   }
   return result
@@ -23,7 +21,7 @@ max ::= (lhs: $lhs, rhs: $lhs) -> $lhs {
 
 seat := 0
 file.File ("input.txt") open [f: *cstdio.File] {
-  line: [1024; u8]
+  line: [1024; char]
   while (cstdio.fgets(&line[0], 1024 as i32, f) != null) do {
     seat = max(seat, parse_seat(&line[0], 10 as u64))
   }

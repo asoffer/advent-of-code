@@ -4,21 +4,21 @@ io     ::= import "io.ic"
 file   ::= import "file.ic"
 
 fscanf ::= foreign("fscanf",
-  (*cstdio.File, *u8, *i64, *i64, *u8, *u8) -> i32)
+  (*cstdio.File, [*]char, *i64, *i64, *char, [*]char) -> i32)
 
 success_count := 0
 
 file.File ("input.txt") open [f: *cstdio.File] {
   low: i64
   high: i64
-  char: u8
-  password: [1024; u8]
+  character: char
+  password: [1024; char]
 
-  while (fscanf(f, &"%lld-%lld %c: %s"[0], &low, &high, &char, &password[0]) != cstdio.eof) do {
+  while (fscanf(f, "%lld-%lld %c: %s".data, &low, &high, &character, &password[0]) != cstdio.eof) do {
     i := 0
     char_count := 0
-    while (password[i] != 0 as u8) do {
-      if (password[i] == char) then {
+    while (password[i] != 0 as u8 as char) do {
+      if (password[i] == character) then {
         char_count += 1
       }
       i += 1

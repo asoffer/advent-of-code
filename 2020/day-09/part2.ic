@@ -7,9 +7,9 @@ NUM_LINES ::= 1000
 nums: [NUM_LINES; i64]
 
 file.File ("input.txt") open [f: *cstdio.File] {
-  fscanf ::= foreign("fscanf", (*cstdio.File, [*]u8, *i64) -> i32)
+  fscanf ::= foreign("fscanf", (*cstdio.File, [*]char, *i64) -> i32)
   index := 0
-  while (fscanf(f, &"%lld"[0], &nums[index]) != cstdio.eof) do { index += 1 }
+  while (fscanf(f, "%lld".data, &nums[index]) != cstdio.eof) do { index += 1 }
 }
 
 validate ::= (ptr: [*]i64, len: i64) -> i64 {
@@ -60,7 +60,7 @@ for (0, NUM_LINES - 25) do [i: i64] {
     s := sum(&nums[i], j)
     if (num == s) then {
       io.Print(min(&nums[i], j) + max(&nums[i], j))
-      io.Print("\n")
+      io.Print(`\n)
     }
   }
 }

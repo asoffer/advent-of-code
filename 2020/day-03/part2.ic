@@ -6,7 +6,7 @@ file   ::= import "file.ic"
 width  ::= 31
 height ::= 323
 
-map: [height, width + 1; u8]
+map: [height, width + 1; char]
 file.File ("input.txt") open [f: *cstdio.File] {
   load_map(f, map) 
 }
@@ -19,14 +19,14 @@ counts := [
   count_trees(map, right = 1, down = 2)]
 io.Print(counts[0] * counts[1] * counts[2] * counts[3] * counts[4])
 
-load_map ::= (f: *cstdio.File, m: *[height, width + 1; u8]) -> () {
+load_map ::= (f: *cstdio.File, m: *[height, width + 1; char]) -> () {
   for (0, height) do [i: i64] {
     cstdio.fgets((@m)[i][0], (width + 1) as i32, f)
-    cstdio.fgetc(f) // Ignore remaining newline.
+    f'fgetc // Ignore remaining newline.
   }
 }
 
-count_trees ::= (m: *[height, width + 1; u8], right: i64, down: i64) -> i64 {
+count_trees ::= (m: *[height, width + 1; char], right: i64, down: i64) -> i64 {
   i := 0
   j := 0
   tree_count := 0
