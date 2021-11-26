@@ -1,21 +1,28 @@
---     ::= import "core.ic"
-cstdio ::= import "cstdio.ic"
-io     ::= import "io.ic"
-file   ::= import "file.ic"
+--      ::= import "core.ic"
+c       ::= import "c/types.ic"
+cstdlib ::= import "c/stdlib.ic"
+cstdio  ::= import "c/stdio.ic"
+errno   ::= import "errno.ic"
+file    ::= import "file.ic"
+io      ::= import "io.ic"
 
 length ::= 200
-nums: [length; i64]
+nums: [length; c.int]
 
-file.File ("input.txt") open [f: *cstdio.File] {
-  fscanf ::= foreign("fscanf", (*cstdio.File, [*]char, *i64) -> i32)
-  index := 0
-  while (fscanf(f, "%lld".data, &nums[index]) != cstdio.eof) do { index += 1 }
+file.With ("input.txt") open [f: file.File] {
+  i: i64 = 0
+  file.Lines (f) each [line: []char] {
+    nums[i] = cstdlib.atoi(line.data)
+    i += 1
+  }
+} error [e: errno.error] {
+  cstdio.perror("Error opening file".data)
 }
 
 for (0, length) do [i: i64] {
   for (i + 1, length) do [j: i64] {
     if (nums[i] + nums[j] == 2020) then {
-      io.Print(nums[i] * nums[j])
+      io.Print(nums[i] * nums[j], "\n")
     }
   }
 }
