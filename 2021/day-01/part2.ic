@@ -8,8 +8,7 @@ io      ::= import "io.ic"
 increases: u64
 
 file.With ("input.txt") open [f: file.File] {
-  initial := 1000000 as i64
-  a := [initial, initial, initial, initial]
+  a := 4'element_array_of(i64'max)
   file.Lines (f) each [line: []char] {
     a = [a[1], a[2], a[3], cstdlib.atoi(line.data) as i64]
     if (a[0] < a[3]) then { increases += 1 }

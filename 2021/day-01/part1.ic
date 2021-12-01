@@ -8,11 +8,10 @@ io      ::= import "io.ic"
 increases: u64
 
 file.With ("input.txt") open [f: file.File] {
-  x := 9223372036854775807 as i64
-  y := 9223372036854775807 as i64
+  a := 2'element_array_of(i64'max)
   file.Lines (f) each [line: []char] {
-    (x, y) = (y, cstdlib.atoi(line.data) as i64)
-    if (y > x) then { increases += 1 }
+    a = [a[1], cstdlib.atoi(line.data) as i64]
+    if (a[1] > a[0]) then { increases += 1 }
   }
 } error [e: errno.error] {
   cstdio.perror("Error opening file".data)
