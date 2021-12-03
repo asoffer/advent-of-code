@@ -1,0 +1,30 @@
+--      ::= import "core.ic"
+c       ::= import "c/types.ic"
+cstdlib ::= import "c/stdlib.ic"
+cstdio  ::= import "c/stdio.ic"
+errno   ::= import "errno.ic"
+file    ::= import "file.ic"
+io      ::= import "io.ic"
+
+horizontal: i64
+vertical: i64
+
+char_to_integer ::= (ch: char) -> i64 {
+  return ((ch as u8) - (!0 as u8)) as i64
+}
+
+file.With ("input.txt") open [f: file.File] {
+  file.Lines (f) each [line: []char] {
+    if (line[0] == !f) then {
+      horizontal += char_to_integer(line[8])
+    } else if (line[0] == !d) then {
+      vertical += char_to_integer(line[5])
+    } else {
+      vertical -= char_to_integer(line[3])
+    }
+  }
+} error [e: errno.error] {
+  cstdio.perror("Error opening file".data)
+}
+
+io.Print(horizontal * vertical)
