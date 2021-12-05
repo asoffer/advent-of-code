@@ -6,28 +6,53 @@ errno   ::= import "errno.ic"
 file    ::= import "file.ic"
 io      ::= import "io.ic"
 
-horizontal: i64
-aim: i64
-depth: i64
+parse_command ::= scope {
+  enter ::= jump(line: []char) {
+    char_to_integer ::= (ch: char) => ((ch as u8) - (!0 as u8)) as i64
 
-char_to_integer ::= (ch: char) -> i64 {
-  return ((ch as u8) - (!0 as u8)) as i64
+    if (line[0] == !f) then {
+      goto forward(char_to_integer(line[8]))
+    } else if (line[0] == !d) then {
+      goto down(char_to_integer(line[5]))
+    } else {
+      goto up(char_to_integer(line[3]))
+    }
+  }
+
+  forward ::= block {
+    before ::= (n: i64) => n
+    after ::= jump() { goto done() }
+  }
+  up ::= block {
+    before ::= (n: i64) => n
+    after ::= jump() { goto done() }
+  }
+  down ::= block {
+    before ::= (n: i64) => n
+    after ::= jump() { goto done() }
+  }
+
+  exit ::= () -> () {}
 }
 
 file.With ("input.txt") open [f: file.File] {
+  horizontal: i64
+  aim: i64
+  depth: i64
+
   file.Lines (f) each [line: []char] {
-    if (line[0] == !f) then {
-      n := char_to_integer(line[8])
+    parse_command (line) forward [n: i64] {
       horizontal += n
       depth += aim * n
-    } else if (line[0] == !d) then {
-      aim += char_to_integer(line[5])
-    } else {
-      aim -= char_to_integer(line[3])
-    }
+      } down [n: i64] {
+        aim += n
+      } up [n: i64] {
+        aim -= n
+      }
   }
+
+  io.Print(horizontal * depth)
 } error [e: errno.error] {
   cstdio.perror("Error opening file".data)
 }
 
-io.Print(horizontal * depth)
