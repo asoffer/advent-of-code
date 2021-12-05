@@ -1,0 +1,33 @@
+--      ::= import "core.ic"
+c       ::= import "c/types.ic"
+cstdlib ::= import "c/stdlib.ic"
+cstdio  ::= import "c/stdio.ic"
+errno   ::= import "errno.ic"
+file    ::= import "file.ic"
+io      ::= import "io.ic"
+
+char_to_integer ::= (ch: char) -> i64 {
+  return ((ch as u8) - (!0 as u8)) as i64
+}
+
+LINE_LENGTH ::= 12
+data: [LINE_LENGTH; i64]
+
+file.With ("input.txt") open [f: file.File] {
+  file.Lines (f) each [line: []char] {
+    for (0, LINE_LENGTH) do [i: i64] {
+      data[i] += 2 * char_to_integer(line[i]) - 1
+    }
+  }
+
+  pow2: i64 = 2048
+  gamma: i64
+  epsilon: i64
+  for (0, LINE_LENGTH) do [i: i64] {
+    if (data[i] > 0) then { gamma += pow2 } else { epsilon += pow2 }
+    pow2 /= 2
+  }
+  io.Print(gamma * epsilon)
+} error [e: errno.error] {
+  cstdio.perror("Error opening file".data)
+}
