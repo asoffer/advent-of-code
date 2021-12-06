@@ -1,0 +1,25 @@
+--   ::= import "core.ic"
+file ::= import "file.ic"
+io   ::= import "io.ic"
+str  ::= import "string/split.ic"
+
+parse ::= (c: char) => (c as u8) - (!0 as u8)
+file.With ("input.txt") open [f: file.File] {
+  a: [9; i64]
+ 
+  file.Lines (f) each [line: []char] {
+    str.Split (line, !,) do [chunk: []char] {
+      a[parse(chunk[0])] += 1
+    }
+  }
+ 
+  repeat (80) do {
+    b := [a[1], a[2], a[3], a[4],
+          a[5], a[6], a[7] + a[0], a[8], a[0]]
+    a = b
+  }
+
+  total: i64
+  for (0, 9) do [i: i64] { total += a[i] }
+  io.Print(total, "\n")
+}
